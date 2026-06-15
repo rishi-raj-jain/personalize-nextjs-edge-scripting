@@ -16,7 +16,7 @@ https://github.com/user-attachments/assets/9d5079f0-8fd5-4196-ac8a-6d5d6f94cfce
 
 The screenshot below shows the same app opened from three locations at once (Montreal, Chennai, and Cardiff), each with a localized greeting, region-specific CDN signals, and the edge-injected aside.
 
-![Edge personalization across Montreal, Chennai, and Cardiff: country-specific greetings, CDN signals, and the onOriginResponse aside injected at the edge](./edge-personalization-by-region.png)
+![Three-region edge personalization demo with localized greetings in Montreal, Chennai, and Cardiff](./images/edge-personalization-by-region.png)
 
 Reference implementations for both projects are in separate GitHub repositories: [personalize-nextjs-app](https://github.com/rishi-raj-jain/personalize-nextjs-app) and [personalize-edge-script](https://github.com/rishi-raj-jain/personalize-edge-script).
 
@@ -65,7 +65,7 @@ personalize-edge-script/
 
 When a user requests a page, the request arrives at Bunny CDN first, and if a middleware Edge Script is attached to that Pull Zone, it runs before the request is forwarded to your origin server.
 
-![Request lifecycle: Bunny Edge Middleware, Next.js on Magic Containers, and back to the browser](./request-lifecycle.png)
+![Request lifecycle diagram from the browser through Bunny Edge Middleware to Next.js on Magic Containers and back](./images/request-lifecycle.png)
 
 The diagram above shows the full round trip. An orange arrow marks each outgoing request, including the hop from the edge middleware to Next.js with injected `x-*` headers. A navy arrow marks each response on the way back, ending with the stamped HTML the browser receives.
 
@@ -1006,7 +1006,7 @@ jobs:
 
 Push a commit to `main` in the Next.js app repository to trigger the first build. Wait for the "Build and push" step to complete. The workflow output shows the full image name and tag that you will paste into Magic Containers:
 
-![](./images/commit.png)
+![GitHub Actions Build and push step output showing the GHCR image name and commit SHA tag](./images/commit.png)
 
 ### Create the Magic Containers app for Next.js
 
@@ -1019,11 +1019,11 @@ Now, click **Add Container** and configure the container as follows:
 - Set the image name to your Next.js app repository path, for example `rishi-raj-jain/personalize-nextjs-app`
 - Set the image tag to the commit SHA from your latest GitHub Actions run
 
-![]()
+![Magic Containers Add Container form with GitHub Public registry, image name, and commit SHA tag](./images/container-1.png)
 
 Click **Add endpoint** and leave environment variables empty for now. Click **Add Container**, then **Next Step**, then **Confirm and Create**.
 
-![]()
+![Magic Containers app overview showing the deployed container image and Magic Containers endpoint URL](./images/container-2.png)
 
 While the container is being deployed, copy the following value:
 
@@ -1063,13 +1063,13 @@ In the Bunny dashboard, go to **Delivery > CDN** and click **Add Pull Zone**.
 3. Set **Origin URL** to your Magic Containers deployment URL (for example, `https://your-nextjs-magic-container-url.bunny.run`).
 4. Click **Add Pull Zone**.
 
-![Add Pull Zone with Origin URL pointing at your Magic Containers deployment](./pull-1.png)
+![Bunny dashboard Add Pull Zone form with Origin URL set to a Magic Containers deployment](./images/pull-1.png)
 
 #### Create the middleware script from GitHub
 
 Go to **Edge Platform > Scripting** and click **Add script**. On the **Add script** page, choose **Deploy With GitHub**.
 
-![Add script page with Deploy With GitHub selected](./script-1.png)
+![Bunny Edge Scripting Add script page with the Deploy With GitHub option](./images/script-1.png)
 
 Then, complete the form with:
 
@@ -1080,7 +1080,7 @@ Then, complete the form with:
 5. **Deployment settings:** Check **I will create the GitHub workflow file myself**. This guide adds `.github/workflows/deploy-edge-script.yml` in the edge script repository in the next step instead of using the auto-generated workflow.
 6. Click **Add Script**.
 
-![Middleware script form with Pull Zone, GitHub repository, and manual workflow option configured](./script-2.png)
+![Edge Script middleware form with Pull Zone, GitHub repository, and manual GitHub workflow checkbox selected](./images/script-2.png)
 
 #### Copy the Script ID and Deployment key
 
@@ -1091,7 +1091,7 @@ Open your script in the dashboard, go to **Deployments > Settings**, and copy:
 
 Store these as `SCRIPT_ID` and `DEPLOY_KEY` in the GitHub secrets step below. The **Deployments > Settings** page also shows the Pull Zone hostname (for example, `https://personaze.b-cdn.net`) where the middleware will serve traffic once deployed.
 
-![Deployment settings showing Script ID and Deployment key](./script-3.png)
+![Edge Script Deployments Settings page with Script ID and Deployment key](./images/script-3.png)
 
 Before configuring a GitHub Action to automate deployments of the edge script, add these secrets to the **edge script repository** under **Settings > Secrets and variables > Actions**:
 
@@ -1144,7 +1144,7 @@ Check response headers on the homepage with curl:
 curl -sI "https://your-script.b-cdn.net/" | grep -i x-edge
 ```
 
-![](./x-edge.png)
+![curl output showing x-edge-homepage-id, x-edge-processed-at, and x-edge-script-message response headers](./images/x-edge.png)
 
 You should see `x-edge-homepage-id`, `x-edge-processed-at`, and `x-edge-script-message` confirming the response hook ran at the edge. To simulate different CDN signals during local development, pass `cdn-requestcountrycode`, `cdn-requeststatecode`, and `cdn-mobiledevice` headers in your curl command.
 
