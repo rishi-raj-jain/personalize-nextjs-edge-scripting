@@ -996,7 +996,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: Dockerfile
+          context: .
           push: true
           platforms: linux/amd64
           provenance: false
