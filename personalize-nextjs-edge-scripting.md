@@ -24,7 +24,7 @@ Reference implementations for both projects are in separate GitHub repositories:
 
 To follow along in this guide, you will need the following:
 
-- [Node.js 20](https://nodejs.org/en) or later
+- [Node.js 22](https://nodejs.org/en) or later
 - A [Bunny.net](https://bunny.net) account
 - A [GitHub](https://github.com) account
 
